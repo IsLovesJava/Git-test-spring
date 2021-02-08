@@ -2,8 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-         http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+         http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <context:property-placeholder location="jdbc.properties"/>
 <!--    数据源 使用阿里的druid德鲁伊   一般配置 url username password 就好-->
@@ -11,9 +12,7 @@
         <property name="url" value="${mysql.url}" />
         <property name="username" value="${mysql.username}" />
         <property name="password" value="${mysql.password}" />
-
         <property name="maxActive" value="20" />
-
     </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -31,4 +30,12 @@
     <bean id="studentService" class="com.pan.service.StudentServiceImpl">
         <property name="studentDAO" ref="studentDAO"/>
     </bean>
+
+<!--    声明事务管理器对象-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+<!--    开启事务注解驱动-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>
